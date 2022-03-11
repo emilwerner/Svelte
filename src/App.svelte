@@ -1,30 +1,42 @@
 <script>
-	export let name;
+  import { storage } from './storage';
+  import TodoList from './todolist.svelte';
+  import TodoForm from './form.svelte';
+
+  let array = storage.getList();
+
+  const addToList = (obj) => {
+    if (obj) {
+      array = [...array, obj];
+      persistList();
+    }
+  };
+
+  const deleteFromList = (id) => {
+    array = array.filter((item) => item.id !== id);
+    persistList();
+  };
+
+  const persistList = () => {
+    storage.setList(array);
+  };
 </script>
 
-<main>
-	<h1>Hello {name}!</h1>
-	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
-</main>
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <TodoForm {addToList} />
+      <TodoList {array} {persistList} {deleteFromList} />
+    </div>
+  </div>
+</div>
 
 <style>
-	main {
-		text-align: center;
-		padding: 1em;
-		max-width: 240px;
-		margin: 0 auto;
-	}
-
-	h1 {
-		color: #ff3e00;
-		text-transform: uppercase;
-		font-size: 4em;
-		font-weight: 100;
-	}
-
-	@media (min-width: 640px) {
-		main {
-			max-width: none;
-		}
-	}
+  .container {
+    margin-top: 150px;
+    background: #f9f6ee;
+    border-radius: 5px;
+    padding: 25px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  }
 </style>
